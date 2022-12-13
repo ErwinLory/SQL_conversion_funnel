@@ -1,4 +1,4 @@
--- step 1: select all viwes for relevant session (became sub-query for step 2)
+-- step 1: select all views for relevant session (became sub-query for step 2)
 -- step 2: identify each relevant pageviews as the spesific funnel step
 WITH session_level_made_it_flags AS
 (
