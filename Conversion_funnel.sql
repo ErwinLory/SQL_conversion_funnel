@@ -3,7 +3,7 @@
 WITH session_level_made_it_flags AS
 (
 SELECT
-	website_session_id
+    website_session_id
     ,MAX(products_page) AS product_made_it
     ,MAX(mrfuzzy_page) AS mrfuzzy_made_it
     ,MAX(carts_page) AS carts_made_it
@@ -13,7 +13,7 @@ SELECT
 FROM
 (
 SELECT 
-	website_sessions.website_session_id
+    website_sessions.website_session_id
     ,website_pageviews.pageview_url
     ,website_pageviews.created_at AS pageview_created_at
     ,CASE WHEN pageview_url = '/products' THEN 1 ELSE 0 END AS products_page
@@ -24,7 +24,7 @@ SELECT
     ,CASE WHEN pageview_url = '/thank-you-for-your-order' THEN 1 ELSE 0 END AS thankyou_page
 FROM website_sessions
 LEFT JOIN website_pageviews
-	ON website_sessions.website_session_id = website_pageviews.website_session_id
+    ON website_sessions.website_session_id = website_pageviews.website_session_id
 WHERE website_sessions.created_at BETWEEN '2012-04-01' AND '2012-06-30' -- limination only for Q2 2012
 AND website_pageviews.pageview_url IN ('/home', '/products', '/the-original-mr-fuzzy', '/cart', '/shipping', '/billing', '/thank-you-for-your-order')
 ORDER BY 1, 3
@@ -33,8 +33,9 @@ GROUP BY website_session_id
 )
 
 -- step 3: Count number of session in each funnel step
+
 SELECT
-	COUNT(DISTINCT website_session_id) AS total_sessions
+    COUNT(DISTINCT website_session_id) AS total_sessions
     ,COUNT(DISTINCT CASE WHEN product_made_it = 1 THEN website_session_id ELSE NULL END) AS to_products
     ,COUNT(DISTINCT CASE WHEN mrfuzzy_made_it = 1 THEN website_session_id ELSE NULL END) AS to_mrfuzzy
     ,COUNT(DISTINCT CASE WHEN carts_made_it = 1 THEN website_session_id ELSE NULL END) AS to_carts
@@ -44,8 +45,9 @@ SELECT
 FROM session_level_made_it_flags;
 
 -- step 4: aggregate the data to assess funnel performace (conversion rate)
+
 SELECT
-	COUNT(DISTINCT website_session_id) AS total_sessions
+    COUNT(DISTINCT website_session_id) AS total_sessions
     ,COUNT(DISTINCT CASE WHEN product_made_it = 1 THEN website_session_id ELSE NULL END)/COUNT(DISTINCT website_session_id) AS percent_to_products
     ,COUNT(DISTINCT CASE WHEN mrfuzzy_made_it = 1 THEN website_session_id ELSE NULL END)/COUNT(DISTINCT website_session_id) AS percent_to_mrfuzzy
     ,COUNT(DISTINCT CASE WHEN carts_made_it = 1 THEN website_session_id ELSE NULL END)/COUNT(DISTINCT website_session_id) AS percent_to_carts
